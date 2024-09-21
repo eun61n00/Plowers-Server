@@ -57,7 +57,7 @@ jobs:
         shell: bash
 
       - name: AWS credential 설정
-        uses: aws-actions/configuration-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
           aws-access-key-id: ${{ env.AWS_IAM_USER_ACCESS_KEY }}
