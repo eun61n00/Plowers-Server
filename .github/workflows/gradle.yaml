@@ -57,12 +57,12 @@ jobs:
         run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
 
-      - name: AWS credential 설정
+      - name: AWS credential settings
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
-          aws-access-key-id: ${{ env.AWS_IAM_USER_ACCESS_KEY }}
-          aws-secret-access-key: ${{ env.AWS_IAM_USER_SECRET_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_IAM_USER_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_USER_SECRET_KEY }}
 
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$AWS_S3_BUCKET/$GITHUB_SHA.zip
