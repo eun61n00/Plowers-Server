@@ -13,5 +13,5 @@ sudo ps -ef | grep java | awk '{print $2}' | xargs kill -15
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo ">>> Deploy DEPLOY_JAR"    >> /home/ubuntu/deploy.log
-echo ">>> Run $JAR_NAME of $DEPLOY_JAR" >> /home/ubunru/deploy.log
+echo ">>> Run $JAR_NAME of $DEPLOY_JAR" >> /home/ubuntu/deploy.log
 nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2> /home/ubuntu/deploy_err.log &
