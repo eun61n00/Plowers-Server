@@ -1,0 +1,71 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches:
+      - main
+      - deploy
+  pull_request:
+    branches:
+      - main
+
+env:
+  AWS_REGION: ap-northeast-2
+  AWS_S3_BUCKET: plowers-deploy-bucket
+  AWS_CODEDEPLOY_APPLICATION: Plowers-Application-CD
+  AWS_CODEDEPLOY_GROUP: Plowers-Deployment-Group
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: make application.yml
+        run: |
+          mkdir -p ./src/main/resources
+          cd ./src/main/resources
+          touch ./application.yml
+          touch ./application-common.yml
+          touch ./application-prod.yml
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
+          echo "${{ secrets.COMMON }}" > ./application-common.yml
+          echo "${{ secrets.PROD }}" > ./application-production.yml
+
+      - name: Grant execute permission for gradle
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Run tests with Gradle
+        run: ./gradlew test
+
+      - name: MAKE zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: AWS credential settings
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_IAM_USER_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_USER_SECRET_KEY }}
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$AWS_S3_BUCKET/$GITHUB_SHA.zip
+
+      - name: Deploy on EC2
+        run: aws deploy create-deployment --application-name ${{ env.AWS_CODEDEPLOY_APPLICATION }} --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name ${{ env.AWS_CODEDEPLOY_GROUP }} --s3-location bucket=$AWS_S3_BUCKET,key=$GITHUB_SHA.zip,bundleType=zip
