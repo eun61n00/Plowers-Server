@@ -5,6 +5,7 @@ import com.plowers.domain.user.dto.response.UserResponse;
 import com.plowers.domain.user.service.AuthService;
 import com.plowers.domain.user.service.UserService;
 import com.plowers.global.dto.response.ResultResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
