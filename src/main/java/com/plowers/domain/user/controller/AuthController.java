@@ -25,7 +25,7 @@ public class AuthController {
         UserResponse newUser = authService.signup(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ResultResponse.create("Sign up Success", newUser));
+                .body(ResultResponse.create("Sign Up Success", newUser));
     }
 
 }
