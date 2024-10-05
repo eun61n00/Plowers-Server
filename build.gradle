@@ -41,8 +41,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
 
-    //jjwt
+    // jjwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // mysql
+    implementation 'mysql:mysql-connector-java:8.0.31'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
