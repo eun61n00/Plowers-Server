@@ -34,7 +34,7 @@ jobs:
       - name: make .env
         run: |
           touch ./.env
-          echo "${{ SECRETS.ENV }} > ./.env
+          echo "${{ SECRETS.ENV }}" > ./.env
 
       - name: Grant execute permission for gradle
         run: chmod +x ./gradlew
