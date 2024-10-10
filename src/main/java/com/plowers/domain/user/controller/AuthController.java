@@ -3,8 +3,8 @@ package com.plowers.domain.user.controller;
 import com.plowers.domain.user.dto.request.SignUpRequest;
 import com.plowers.domain.user.dto.response.UserResponse;
 import com.plowers.domain.user.service.AuthService;
-import com.plowers.domain.user.service.UserService;
 import com.plowers.global.dto.response.ResultResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +21,11 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody SignUpRequest request) {
+    public ResponseEntity<Object> signup(@RequestBody @Valid SignUpRequest request) {
         UserResponse newUser = authService.signup(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ResultResponse.create("Sign up Success", newUser));
+                .body(ResultResponse.create("Sign Up Success", newUser));
     }
 
 }
